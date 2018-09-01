@@ -69,6 +69,7 @@ class MovesController extends Controller
     public function actionAssign()
     {
         $moves = Yii::$app->getRequest()->post('moves', []);
+        //todo 还需改用数据库实现
         for($i = count($moves)-1; $i >= 0; $i--) {
             // 删除一维数组中某一个值元素，使用array_search和array_splice，这里array_splice自动实现重置序列值
             $key = array_search($moves[$i], self::$movesData['available']);
