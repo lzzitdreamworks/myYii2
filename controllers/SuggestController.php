@@ -11,32 +11,25 @@ class SuggestController extends \yii\web\Controller
     //todo 未完善
     public function actionIndex($page = 1, $size = 10)
     {
-        $goodsList = [];
-        $keyword = \Yii::$app->request->get('keyword');
+        $goodsList = Suggest::find()->orderBy('goods_id DESC');
+        $keyword = \Yii::$app->request->post('keyword');
         $keyword = strpos($keyword,',') !== false ? explode(",", $keyword) : $keyword;
+
         if ($keyword) {
-            if (is_array($keyword)) {
-                foreach ($keyword AS &$value) {
-                    $value = "%{$value}%";
-                }
-            }
-            $goodsList = Suggest::find()->orderBy('goods_id DESC');
-            $goodsList->andFilterWhere(['like', "goods_id", $keyword])
-                ->orFilterWhere(['like', "goods_name", $keyword]);
-//            $pages = new Pagination(['totalCount' => $goodsList->count(), 'pageSize' => $size]);
-            $goodsList = $goodsList->offset(($page - 1) * $size)->limit($size)->asArray()->all();
-//            $sql = $goodsList->find()->createCommand()->getRawSql();
-//            echo "<pre>sql: "; print_r($sql); exit;
+            $goodsList->andFilterWhere(['OR LIKE', "goods_id", $keyword])
+                ->orFilterWhere(['OR LIKE', "goods_name", $keyword]);
+            //  ->asArray()->all();
+            //  $sql = $goodsList->createCommand()->getRawSql();
+            //  echo "<pre>sql: "; print_r($sql); exit;
         }
+        $pages = new Pagination(['totalCount' => $goodsList->count(), 'pageSize' => $size]);
+        $goodsList = $goodsList->offset(($page - 1) * $size)->limit($size)->asArray()->all();
 
-//        echo "<pre>"; print_r($keyword); exit;
-
-        return $this->render('index', [
+        return $this->render('search', [
             'goods_data' => $goodsList,
-//            'pages' => $pages,
+            'keyword' => $keyword,
+            'pages' => $pages,
         ]);
-
-        return $this->render('index');
     }
 
     /**

@@ -1,5 +1,6 @@
 <?php
 /* @var $this yii\web\View */
+use yii\widgets\LinkPager;
 ?>
 <h4>bootstrap combox 搜索建议插件之淘宝搜索</h4>
 
@@ -8,10 +9,10 @@
         <div class="search">
             商品名称: <div class="input-group" style="width: 30%">
                 <input type="text" id="keyword" name='keyword' class="form-control" placeholder='商品名用英文,隔开如: 欧时纳,梦特娇',
-                       value='<?php if(isset($param['keyword']) && !empty($param['keyword'])) {
-                           if (is_array($param['keyword'])) {
-                               echo implode(',', $param['keyword']);
-                           } else { echo $param['keyword']; }
+                       value='<?php if(isset($keyword) && !empty($keyword)) {
+                           if (is_array($keyword)) {
+                               echo implode(',', $keyword);
+                           } else { echo $keyword; }
                        } ?>'/>
                 <div class="input-group-btn">
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -47,6 +48,8 @@
         </tr>
     <?php } ?>
 </table>
+
+<?= LinkPager::widget(['pagination' => $pages]); ?>
 
 <script type="text/javascript" src="<?php echo Yii::$app->request->baseUrl?>/js/jquery-1.9.1.min.js"></script>
 <script src="<?php echo Yii::$app->request->baseUrl?>/js/bootstrap-suggest.js"></script>
